@@ -1,0 +1,190 @@
+{
+  "file_counts": {
+    "RGB": 734,
+    "Masks": 734,
+    "Multispectral": 2936
+  },
+  "splits": {
+    "train": {
+      "listed": 438,
+      "duplicates": [],
+      "paired": 438,
+      "foreground_pixels": 168095430,
+      "pixels": 538214400,
+      "foreground_fraction": 0.3123205733625856
+    },
+    "val": {
+      "listed": 148,
+      "duplicates": [],
+      "paired": 148,
+      "foreground_pixels": 56811988,
+      "pixels": 181862400,
+      "foreground_fraction": 0.3123899607615428
+    },
+    "test": {
+      "listed": 148,
+      "duplicates": [],
+      "paired": 148,
+      "foreground_pixels": 61085598,
+      "pixels": 181862400,
+      "foreground_fraction": 0.33588910077069256
+    }
+  },
+  "intersections": {
+    "train:val": [],
+    "train:test": [],
+    "val:test": []
+  },
+  "size_counts": {
+    "(1280, 960)": 734
+  },
+  "mask_values": {
+    "0": 615946184,
+    "255": 285993016
+  },
+  "band_shapes": {
+    "[960, 1280, 3]": 2936
+  },
+  "band_dtypes": {
+    "uint8": 2936
+  },
+  "non_identical_bands": [],
+  "size_mismatches": [],
+  "missing": [],
+  "metadata_errors": [],
+  "read_errors": [],
+  "alignment_note": "Equal dimensions and matching names do not establish pixel-level spatial registration.",
+  "shared_acquisition_dates": {
+    "train:val": [
+      "2024-06-02",
+      "2024-06-04",
+      "2024-09-30",
+      "2025-01-15"
+    ],
+    "train:test": [
+      "2024-06-02",
+      "2024-06-04",
+      "2024-09-30",
+      "2025-01-15"
+    ],
+    "val:test": [
+      "2024-06-02",
+      "2024-06-04",
+      "2024-09-30",
+      "2025-01-15"
+    ]
+  },
+  "adjacent_cross_split_count": 325,
+  "adjacent_cross_split_examples": [
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_42_0036_lat_10.3040274_lon_105.2619303_alt_19.998m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0037_lat_10.3039956_lon_105.2619281_alt_20.000m.JPG"
+      ],
+      "splits": [
+        "train",
+        "test"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0037_lat_10.3039956_lon_105.2619281_alt_20.000m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0038_lat_10.3039632_lon_105.2619268_alt_20.009m.JPG"
+      ],
+      "splits": [
+        "test",
+        "train"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0040_lat_10.3038985_lon_105.2619236_alt_20.019m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0041_lat_10.3038666_lon_105.2619219_alt_20.001m.JPG"
+      ],
+      "splits": [
+        "train",
+        "test"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0041_lat_10.3038666_lon_105.2619219_alt_20.001m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0042_lat_10.3038342_lon_105.2619203_alt_20.049m.JPG"
+      ],
+      "splits": [
+        "test",
+        "val"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0042_lat_10.3038342_lon_105.2619203_alt_20.049m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0043_lat_10.3038020_lon_105.2619186_alt_20.044m.JPG"
+      ],
+      "splits": [
+        "val",
+        "train"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0043_lat_10.3038020_lon_105.2619186_alt_20.044m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0044_lat_10.3037699_lon_105.2619171_alt_20.023m.JPG"
+      ],
+      "splits": [
+        "train",
+        "val"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0044_lat_10.3037699_lon_105.2619171_alt_20.023m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0045_lat_10.3037478_lon_105.2619385_alt_19.960m.JPG"
+      ],
+      "splits": [
+        "val",
+        "test"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_43_0046_lat_10.3037496_lon_105.2619705_alt_19.973m.JPG",
+        "DJI_DateTime_2024_06_02_13_43_0047_lat_10.3037770_lon_105.2619830_alt_20.009m.JPG"
+      ],
+      "splits": [
+        "test",
+        "train"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_46_0100_lat_10.3048624_lon_105.2621073_alt_20.006m.JPG",
+        "DJI_DateTime_2024_06_02_13_46_0101_lat_10.3048303_lon_105.2621055_alt_20.021m.JPG"
+      ],
+      "splits": [
+        "train",
+        "val"
+      ]
+    },
+    {
+      "date": "2024-06-02",
+      "samples": [
+        "DJI_DateTime_2024_06_02_13_46_0101_lat_10.3048303_lon_105.2621055_alt_20.021m.JPG",
+        "DJI_DateTime_2024_06_02_13_46_0102_lat_10.3047980_lon_105.2621037_alt_19.992m.JPG"
+      ],
+      "splits": [
+        "val",
+        "train"
+      ]
+    }
+  ]
+}
