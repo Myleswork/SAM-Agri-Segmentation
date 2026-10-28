@@ -1,0 +1,71 @@
+{
+  "model": "sam3_unet",
+  "weight_status": "random initialization",
+  "shapes": {
+    "rgb": {
+      "shape": [
+        1,
+        1,
+        336,
+        336
+      ],
+      "finite": true
+    },
+    "rgbnir4": {
+      "shape": [
+        1,
+        1,
+        336,
+        336
+      ],
+      "finite": true
+    },
+    "rgbms7": {
+      "shape": [
+        1,
+        1,
+        336,
+        336
+      ],
+      "finite": true
+    }
+  },
+  "training_steps": [
+    {
+      "loss": 1.4962708950042725,
+      "spectral_max_update": 9.999979374697432e-05
+    },
+    {
+      "loss": 1.491654872894287,
+      "spectral_max_update": 8.655263081891462e-05
+    }
+  ],
+  "checkpoint_max_error": 0.0,
+  "parameters": {
+    "total": {
+      "total": 449009078,
+      "trainable": 2771382,
+      "frozen": 446237696
+    },
+    "encoder": {
+      "total": 446237696,
+      "trainable": 0,
+      "frozen": 446237696
+    },
+    "adapter": {
+      "total": 2130944,
+      "trainable": 2130944,
+      "frozen": 0
+    },
+    "decoder": {
+      "total": 640417,
+      "trainable": 640417,
+      "frozen": 0
+    },
+    "stem": {
+      "total": 21,
+      "trainable": 21,
+      "frozen": 0
+    }
+  }
+}

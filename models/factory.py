@@ -1,0 +1,100 @@
+"""Thin, non-invasive wrappers around the checked-out upstream networks."""
+import importlib
+from pathlib import Path
+import re
+import sys
+from functools import partial, wraps
+import torch
+from torch import nn
+from models.spectral_stem import SpectralStem
+
+ROOT=Path(__file__).resolve().parents[2]
+COMMITS={'sam2_unet':'01598e5e9912ffb23f965ecbebf4d1dfecbaa56e','sam3_unet':'aca5dd7aa7ce0be93752635d5be6e65f8b0864c8'}
+
+class SegmentationModel(nn.Module):
+    def __init__(self, network, channels):
+        super().__init__(); self.network=network; self.channels=tuple(channels)
+        self.stem=nn.Identity() if self.channels==('rgb_r','rgb_g','rgb_b') else SpectralStem(self.channels)
+    def forward(self,x):
+        raw=self.network(self.stem(x))
+        return {'logits':raw[0], 'aux':list(raw[1:])} if isinstance(raw,(list,tuple)) else {'logits':raw,'aux':[]}
+
+def verify_sam3_weights(expected, actual):
+    # Rotary-frequency buffers are intentionally omitted by the upstream loader.
+    expected={k:v for k,v in expected.items() if 'freqs_cis' not in k}
+    actual={k:v for k,v in actual.items() if 'freqs_cis' not in k}
+    missing=sorted(expected.keys()-actual.keys()); unexpected=sorted(actual.keys()-expected.keys())
+    mismatch=[k for k in expected.keys() & actual.keys() if expected[k].shape!=actual[k].shape]
+    if missing or unexpected or mismatch:
+        raise ValueError(f'SAM3 backbone checkpoint incompatible: missing={missing[:20]} ({len(missing)}), unexpected={unexpected[:20]} ({len(unexpected)}), shape={mismatch[:20]} ({len(mismatch)})')
+    return actual
+
+def _import_upstream(name):
+    path=ROOT/('SAM2-UNet' if name=='sam2_unet' else 'SAM3-UNet')
+    if not path.exists(): raise FileNotFoundError(f'missing upstream repository: {path}')
+    if str(path) not in sys.path: sys.path.insert(0,str(path))
+    old=sys.dont_write_bytecode; sys.dont_write_bytecode=True
+    try: return importlib.import_module('SAM2UNet' if name=='sam2_unet' else 'SAM3UNet')
+    finally: sys.dont_write_bytecode=old
+
+def _without_upstream_bytecode(function):
+    @wraps(function)
+    def run(*args,**kwargs):
+        old=sys.dont_write_bytecode; sys.dont_write_bytecode=True
+        try: return function(*args,**kwargs)
+        finally: sys.dont_write_bytecode=old
+    return run
+
+@_without_upstream_bytecode
+def build_model(model_name, input_spec, config):
+    if model_name not in COMMITS: raise ValueError(f'unsupported model: {model_name}')
+    if config.get('num_classes',1)!=1: raise ValueError('upstream heads only support binary segmentation (one logit)')
+    channels=tuple(input_spec); device=config.get('device','cpu'); size=config.get('size',352 if model_name=='sam2_unet' else 336)
+    if isinstance(size,(list,tuple)):
+        if len(size)!=2 or size[0]!=size[1]: raise ValueError('upstream integration currently requires square size')
+        size=size[0]
+    if model_name=='sam3_unet' and size%14: raise ValueError('SAM3 input size must be divisible by patch size 14')
+    weights=config.get('pretrained')
+    if weights and not Path(weights).is_file(): raise FileNotFoundError(f'pretrained checkpoint missing: {weights}')
+    if weights and config.get('pretrained_version') != ('sam2' if model_name=='sam2_unet' else 'sam3'):
+        raise ValueError('explicit matching pretrained_version sam2/sam3 is required')
+    mod=_import_upstream(model_name)
+    if model_name=='sam2_unet':
+        original=mod.build_sam2
+        mod.build_sam2=partial(original,device=device)
+        try: network=mod.SAM2UNet(str(weights) if weights else None)
+        finally: mod.build_sam2=original
+    else:
+        network=mod.SAM3UNet(img_size=int(size))
+        if weights:
+            ckpt=torch.load(weights,map_location='cpu',weights_only=True)
+            if not isinstance(ckpt,dict): raise ValueError('SAM3 checkpoint must be a state dict')
+            prefix='detector.backbone.vision_backbone.trunk.'
+            actual={k[len(prefix):]:v for k,v in ckpt.items() if k.startswith(prefix)}
+            wrapped=network.sam3_vit.state_dict(); mapped={}
+            for key,value in wrapped.items():
+                if '.prompt_learn.' in key: continue
+                raw=re.sub(r'^(blocks\.\d+)\.block\.',r'\1.',key)
+                mapped[raw]=(key,value)
+            verified=verify_sam3_weights({k:v for k,(_,v) in mapped.items()},actual)
+            with torch.no_grad():
+                for k,v in verified.items(): mapped[k][1].copy_(v)
+    for name,param in network.named_parameters():
+        is_enc=name.startswith(('encoder.','sam3_vit.')); is_adapter='.prompt_learn.' in name
+        if is_adapter: param.requires_grad=config.get('train_adapter',True)
+        elif is_enc: param.requires_grad=not config.get('freeze_encoder',True)
+        else: param.requires_grad=config.get('train_decoder',True)
+    model=SegmentationModel(network,channels).to(device)
+    for p in model.stem.parameters(): p.requires_grad=config.get('train_stem',True)
+    return model
+
+def parameter_summary(model):
+    groups={k:{'total':0,'trainable':0,'frozen':0} for k in ('total','encoder','adapter','decoder','stem')}
+    for name,p in model.named_parameters():
+        if name.startswith('stem.'): group='stem'
+        elif '.prompt_learn.' in name: group='adapter'
+        elif name.startswith(('network.encoder.','network.sam3_vit.')): group='encoder'
+        else: group='decoder'
+        for g in ('total',group):
+            groups[g]['total']+=p.numel(); groups[g]['trainable' if p.requires_grad else 'frozen']+=p.numel()
+    return groups

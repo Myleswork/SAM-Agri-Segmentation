@@ -1,0 +1,71 @@
+{
+  "model": "sam2_unet",
+  "weight_status": "random initialization",
+  "shapes": {
+    "rgb": {
+      "shape": [
+        1,
+        1,
+        352,
+        352
+      ],
+      "finite": true
+    },
+    "rgbnir4": {
+      "shape": [
+        1,
+        1,
+        352,
+        352
+      ],
+      "finite": true
+    },
+    "rgbms7": {
+      "shape": [
+        1,
+        1,
+        352,
+        352
+      ],
+      "finite": true
+    }
+  },
+  "training_steps": [
+    {
+      "loss": 4.587745666503906,
+      "spectral_max_update": 9.999996836995706e-05
+    },
+    {
+      "loss": 4.541707515716553,
+      "spectral_max_update": 0.00010013377323048189
+    }
+  ],
+  "checkpoint_max_error": 0.0,
+  "parameters": {
+    "total": {
+      "total": 216529912,
+      "trainable": 4380616,
+      "frozen": 212149296
+    },
+    "encoder": {
+      "total": 212149296,
+      "trainable": 0,
+      "frozen": 212149296
+    },
+    "adapter": {
+      "total": 1714416,
+      "trainable": 1714416,
+      "frozen": 0
+    },
+    "decoder": {
+      "total": 2666179,
+      "trainable": 2666179,
+      "frozen": 0
+    },
+    "stem": {
+      "total": 21,
+      "trainable": 21,
+      "frozen": 0
+    }
+  }
+}

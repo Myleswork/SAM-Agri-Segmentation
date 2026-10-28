@@ -1,0 +1,16 @@
+[
+  {
+    "model": "sam2_unet",
+    "precision": "bf16",
+    "loss": 4.434676170349121,
+    "spectral_update": 9.999995381804183e-05,
+    "weights": "random initialization"
+  },
+  {
+    "model": "sam3_unet",
+    "precision": "bf16",
+    "loss": 1.4982331991195679,
+    "spectral_update": 9.999849135056138e-05,
+    "weights": "random initialization"
+  }
+]

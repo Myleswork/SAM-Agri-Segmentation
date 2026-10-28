@@ -1,0 +1,54 @@
+[
+  {
+    "model": "sam2_unet",
+    "mode": "rgb",
+    "shape": [
+      1,
+      1,
+      352,
+      352
+    ],
+    "loss": 4.508531093597412,
+    "spectral_update": null,
+    "weight_status": "random initialization"
+  },
+  {
+    "model": "sam2_unet",
+    "mode": "rgbnir4",
+    "shape": [
+      1,
+      1,
+      352,
+      352
+    ],
+    "loss": 4.532041549682617,
+    "spectral_update": 9.999996836995706e-05,
+    "weight_status": "random initialization"
+  },
+  {
+    "model": "sam3_unet",
+    "mode": "rgb",
+    "shape": [
+      1,
+      1,
+      336,
+      336
+    ],
+    "loss": 1.4876478910446167,
+    "spectral_update": null,
+    "weight_status": "random initialization"
+  },
+  {
+    "model": "sam3_unet",
+    "mode": "rgbnir4",
+    "shape": [
+      1,
+      1,
+      336,
+      336
+    ],
+    "loss": 1.494210958480835,
+    "spectral_update": 9.999900794355199e-05,
+    "weight_status": "random initialization"
+  }
+]
